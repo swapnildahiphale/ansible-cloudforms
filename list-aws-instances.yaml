@@ -4,6 +4,11 @@
 - hosts: localhost
   vars_files: 
     - secret.yaml
+  vars:
+    manageiq:
+#       api_token: "" #Generated for each request
+       api_url: "https://18.212.211.91"
+#       service: "services/<svc_id>"  #Generated for each request
   tasks:
     - name: Gather EC2 instances facts
       ec2_instance_facts:
@@ -16,3 +21,20 @@
     
     - debug: var=var1
     - debug: var=manageiq
+
+    - name: Call to CloudForms to extract the dialog_var1 value.
+      uri:
+        url: "{{ manageiq.api_url }}/api/{{ manageiq.service }}"
+        method: GET
+        validate_certs: no
+        headers:
+           X-Auth-Token: "{{ manageiq.api_token }}"
+           Content-Type: "application/json"
+        body_format: json
+        return_content: yes
+      register: token_output
+    - debug: var=token_output
+
+    - set_fact: testvar="{{ token_output.json.options.dialog.dialog_var1 }}"
+    - debug: 
+        msg: "The testvar variable has the value of {{ testvar }}"
