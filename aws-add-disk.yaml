@@ -27,17 +27,20 @@
     - set_fact: volume_size="{{ token_output.json.options.dialog.dialog_volume_size }}"
     - debug:
         msg: "The volume_size variable has the value of {{ volume_size }}"
-
+    
+    - set_fact: instance_id="{{ token_output.json.options.dialog.dialog_instance_id }}"
+    - debug:
+        msg: "The instance_id variable has the value of {{ instance_id }}"
 
     - name: Create a new volume and attach to running instance 
       ec2_vol:
         aws_access_key: "{{ AWS_ACCESS_KEY }}"
         aws_secret_key: "{{ AWS_SECRET_KEY }}"
         region: ap-south-1
-        instance: i-027f13ee5792b8827
+        instance: "{{ instance_id }}"
         volume_type: standard
         volume_size: "{{ volume_size }}"
-        state: list
+        state: present
       register: volume_result
                                                                      
     - debug: msg={{ volume_result }}
