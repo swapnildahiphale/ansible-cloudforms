@@ -13,3 +13,5 @@
       register: info
 
     - debug: var=info
+    
+    - debug: var=var1
