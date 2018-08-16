@@ -1,5 +1,5 @@
-# John Hardy
-# FisherPrice example - Create user "fisherprice" and memberof "EvmGroup-users" in CloudForms.
+# Swapnil Dahiphale
+# List AWS instances example
 ---
 - hosts: localhost
   vars_files: 
