@@ -15,4 +15,4 @@
     - debug: var=info
     
     - debug: var=var1
-    - debug: var=manageiq.api_token
+    - debug: var=manageiq
