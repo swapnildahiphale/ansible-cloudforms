@@ -1,5 +1,5 @@
 # Swapnil Dahiphale
-# List AWS instances example
+# Add EBS volume to EC2 instance
 ---
 - hosts: localhost
   gather_facts: false
