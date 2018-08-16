@@ -1,0 +1,43 @@
+# Swapnil Dahiphale
+# List AWS instances example
+---
+- hosts: localhost
+  gather_facts: false
+  vars_files: 
+    - secret.yaml
+  vars:
+    manageiq:
+#       api_token: "" #Generated for each request
+       api_url: "https://18.212.211.91"
+#       service: "services/<svc_id>"  #Generated for each request
+  tasks:
+    - name: Call to CloudForms to extract the dialog values.
+      uri:
+        url: "{{ manageiq.api_url }}/api/{{ manageiq.service }}"
+        method: GET
+        validate_certs: no
+        headers:
+           X-Auth-Token: "{{ manageiq.api_token }}"
+           Content-Type: "application/json"
+        body_format: json
+        return_content: yes
+      register: token_output
+    - debug: var=token_output
+
+    - set_fact: volume_size="{{ token_output.json.options.dialog.dialog_volume_size }}"
+    - debug:
+        msg: "The volume_size variable has the value of {{ volume_size }}"
+
+
+    - name: Create a new volume and attach to running instance 
+      ec2_vol:
+        aws_access_key: "{{ AWS_ACCESS_KEY }}"
+        aws_secret_key: "{{ AWS_SECRET_KEY }}"
+        region: ap-south-1
+        instance: i-027f13ee5792b8827
+        volume_type: standard
+        volume_size: "{{ volume_size }}"
+        state: list
+      register: volume_result
+                                                                     
+    - debug: msg={{ volume_result }}
